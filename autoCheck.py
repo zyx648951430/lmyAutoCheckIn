@@ -177,7 +177,7 @@ def startAtuoCheckIn(name, pwd, check_late, safe_time, input_location):
                         clazz['flag']=10;
                         safe_times = safe_time
                         while safe_times>=0:
-                            print("防止蓝墨云侦测显示签到异常重复签到，请等待安全倒计时 " + str(safe_times) + " 秒。", end='\r')
+                            print("防止蓝墨云侦测异常重复签到，请等待安全倒计时 " + str(safe_times) + " 秒。", end='\r')
                             safe_times = safe_times - 1
                             time.sleep(1)
                             if safe_times<0:
