@@ -10,7 +10,7 @@ import sys
 md5 = "9579D1CB25BADE7F8A3EB479DD0A2AC3";
 
 #位置信息  可以自行添加经纬度信息   默认使用empty,教师端显示未获取位置
-location = {"12305":{"lat":"33.548733", "lng":"119.033165"},"empty":{"lat":"", "lng":""}}
+location = {"input":{"lat":"", "lng":""}}
 
 #登录蓝墨云
 def login(name, pwd):
@@ -71,6 +71,15 @@ def checkIsOpen(userInfo, clazzId):
 
 #发送签到请求
 def checkIn(userInfo, checkId, location):
+    global check_late
+    check_lates = check_late
+    while check_lates>=0:
+        print("延迟 " + str(check_lates) + " 秒后签到。", end='\r')
+        check_lates = check_lates - 1
+        time.sleep(1)
+        if check_lates<0:
+            print("")
+            break
     try:
         checkInUrl="http://checkin.mosoteach.cn:19527/checkin"
         headers = {"Accept-Encoding":"gzip;q=0.7,*;q=0.7", "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 7.1.1; MX6 Build/NMF26O)",
@@ -123,12 +132,13 @@ def getSignature(url, user_id, gmtTime, access_secret, formdata):
 
 
 #开始签到程序
-def startAtuoCheckIn(name, pwd):
+def startAtuoCheckIn(name, pwd, check_late, safe_time, input_location):
     dt=datetime.datetime.now()
     day=dt.weekday()
 
     #在此处选择签到位置
-    classRom="empty"
+    classRom="input"
+
         
     loginInfo=login(name,pwd)
     if loginInfo==None:
@@ -138,6 +148,13 @@ def startAtuoCheckIn(name, pwd):
     else:
         userInfo=loginInfo['user']
         print(userInfo['full_name']+" 登陆成功!")
+        print("设定的签到延迟为 " + str(check_late) + " 秒。")
+        print("设定的安全间隔为 " + str(safe_time) + " 秒。")
+        if input_location['lat']=="":
+            print("不设定经纬度")
+        else:
+            print("设定的经纬度为东经：" + str(input_location['lat']) + "，北纬：" + str(input_location['lng']) +" 。")
+        print("")
         clazzInfo=getAllClazzInfo(userInfo)['data']
         clazzList=list()
         for clazz in clazzInfo:
@@ -158,6 +175,14 @@ def startAtuoCheckIn(name, pwd):
                     if checkInMsg!=None and checkInMsg['result_code'] == 2409:
                         print(datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S")+" "+clazz['clazz_name']+" 重复签到!")
                         clazz['flag']=10;
+                        safe_times = safe_time
+                        while safe_times>=0:
+                            print("防止蓝墨云侦测显示签到异常重复签到，请等待安全倒计时 " + str(safe_times) + " 秒。", end='\r')
+                            safe_times = safe_times - 1
+                            time.sleep(1)
+                            if safe_times<0:
+                                print("")
+                                break
                     elif checkInMsg!=None and checkInMsg['result_msg']=='OK':
                         clazz['flag']=10;
                         print(datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S")+" "+clazz['clazz_name']+" 签到成功!")
@@ -167,4 +192,36 @@ def startAtuoCheckIn(name, pwd):
 
 name=input("账号：")
 pwd=input("密码：")
-startAtuoCheckIn(name, pwd)
+
+print("")
+
+check_late=input("签到延迟（秒）：")
+if check_late=="":
+    check_late=1
+    print("数值为空，则使用默认数值：1 秒")
+check_late=int(check_late)
+
+print("")
+
+safe_time=input("重复签到安全间隔（秒）：")
+if safe_time=="":
+    safe_time=300
+    print("数值为空，则使用默认数值：300 秒")
+safe_time=int(safe_time)
+
+print("")
+
+input_lat=input("经度：")
+if input_lat=="":
+    input_lng=""
+    print("不设置经纬度")
+else:
+    input_lng=input("维度：")
+print("")
+
+input_location={}
+input_location['lat'] = input_lat
+input_location['lng'] = input_lng
+location['input'] = input_location
+
+startAtuoCheckIn(name, pwd, check_late, safe_time, input_location)
