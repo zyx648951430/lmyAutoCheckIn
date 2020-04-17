@@ -177,7 +177,7 @@ def startAtuoCheckIn(name, pwd, check_late, safe_time, input_location):
                         clazz['flag']=10;
                         safe_times = safe_time
                         while safe_times>=0:
-                            print("防止蓝墨云侦测异常重复签到，请等待安全倒计时 " + str(safe_times) + " 秒。", end='\r')
+                            print("防止蓝墨云侦测异常重复签到，请等待冷却倒计时 " + str(safe_times) + " 秒。", end='\r')
                             safe_times = safe_times - 1
                             time.sleep(1)
                             if safe_times<0:
@@ -186,7 +186,7 @@ def startAtuoCheckIn(name, pwd, check_late, safe_time, input_location):
                     elif checkInMsg!=None and checkInMsg['result_msg']=='OK':
                         clazz['flag']=10;
                         print(datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S")+" "+clazz['clazz_name']+" 签到成功!")
-            time.sleep(1)
+            time.sleep(check_late)
             count=count+1;
         
 
@@ -195,15 +195,15 @@ pwd=input("密码：")
 
 print("")
 
-check_late=input("签到延迟（秒）：")
+check_late=input("检测/签到延迟（秒）：")
 if check_late=="":
-    check_late=1
-    print("数值为空，则使用默认数值：1 秒")
+    check_late=5
+    print("数值为空，则使用默认数值：5 秒")
 check_late=int(check_late)
 
 print("")
 
-safe_time=input("重复签到安全间隔（秒）：")
+safe_time=input("重复签到冷却时长（秒）：")
 if safe_time=="":
     safe_time=300
     print("数值为空，则使用默认数值：300 秒")
@@ -216,7 +216,7 @@ if input_lat=="":
     input_lng=""
     print("不设置经纬度")
 else:
-    input_lng=input("维度：")
+    input_lng=input("纬度：")
 print("")
 
 input_location={}
