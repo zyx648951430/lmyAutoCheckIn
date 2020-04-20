@@ -5,19 +5,19 @@
 echo %path% | findstr Python >nul && goto PythonInstallFinish || goto PythonInstaller
 
 :PythonInstallFinish
-@echo ÄúÒÑ°²×° Python£¬ÕıÔÚÆô¶¯³ÌĞò...
+@echo æ‚¨å·²å®‰è£… Pythonï¼Œæ­£åœ¨å¯åŠ¨ç¨‹åº...
 goto Statup
 
 :PythonInstaller
-echo Î´²éÕÒµ½ Python£¬ÇëÇ°È¥ python.org ÏÂÔØ×îĞÂ°æ Python£¡
-echo °²×°Ê±¼ÇµÃ¹´Ñ¡ Add Python 3.8 to PATH
+echo æœªæŸ¥æ‰¾åˆ° Pythonï¼Œè¯·å‰å» python.org ä¸‹è½½æœ€æ–°ç‰ˆ Pythonï¼
+echo å®‰è£…æ—¶è®°å¾—å‹¾é€‰ Add Python 3.8 to PATH
 start https://www.python.org/downloads/windows/
-echo °´ÈÎÒâ¼üÍË³ö...
+echo æŒ‰ä»»æ„é”®é€€å‡º...
 pause >nul
 exit
 
 :Statup
-@echo ÕıÔÚ¼ì²é²¢°²×°±ØÒª×é¼ş
+@echo æ­£åœ¨æ£€æŸ¥å¹¶å®‰è£…å¿…è¦ç»„ä»¶
 pip freeze > requirements.txt
 pip install -r requirements.txt
 
@@ -25,39 +25,39 @@ pip install -r requirements.txt
 cls
 @echo Powered by SurelySomeday,Link:https://github.com/SurelySomeday
 @echo Bat File by SummonHIM,Link:https://github.com/SummonHIM
-@echo Ñ¡ÔñÒ»Ïî¹¦ÄÜ
+@echo é€‰æ‹©ä¸€é¡¹åŠŸèƒ½
 @echo,
-@echo 1.×Ô¶¯Ç©µ½
-@echo 2.×Ô¶¯Ë¢×ÊÔ´
-@echo 3.ÍË³ö
+@echo 1.è‡ªåŠ¨ç­¾åˆ°
+@echo 2.è‡ªåŠ¨åˆ·èµ„æº
+@echo 3.é€€å‡º
 set SelectNum=
-set /p SelectNum=[1,2,3]£º
+set /p SelectNum=[1,2,3]ï¼š
 if "%SelectNum%" == "1" goto RunautoCheck
 if "%SelectNum%" == "2" goto RunautoView
 if "%SelectNum%" == "3" exit
 @echo,
-@echo ¸ÃÃüÁî "%SelectNum%" ²»´æÔÚ!
-@echo ÃüÁîÌáÊ¾:
+@echo è¯¥å‘½ä»¤ "%SelectNum%" ä¸å­˜åœ¨!
+@echo å‘½ä»¤æç¤º:
 pause
 goto Select
 
 :RunautoCheck
 @echo,
-@echo ÕıÔÚÆô¶¯×Ô¶¯Ç©µ½...
+@echo æ­£åœ¨å¯åŠ¨è‡ªåŠ¨ç­¾åˆ°...
 python autoCheck.py
 goto Restart
 
 :RunautoView
 @echo,
-@echo ÕıÔÚÆô¶¯×Ô¶¯Ë¢×ÊÔ´...
+@echo æ­£åœ¨å¯åŠ¨è‡ªåŠ¨åˆ·èµ„æº...
 python autoView.py
 goto Restart
 
 :Restart
 cls
-@echo ÔËĞĞ½áÊø£¬ÊÇ·ñÖØÆô£¿(Y/n)
+@echo è¿è¡Œç»“æŸï¼Œæ˜¯å¦é‡å¯ï¼Ÿ(Y/n)
 set RestartYorN=
-set /p RestartYorN=[Y = ÊÇ£¬ ÈÎÒâ¼ü = ÍË³ö]£º
+set /p RestartYorN=[Y = æ˜¯ï¼Œ ä»»æ„é”® = é€€å‡º]ï¼š
 if "%RestartYorN%" == "y" goto Head
 if "%RestartYorN%" == "Y" goto Head
 exit
